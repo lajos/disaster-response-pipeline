@@ -71,23 +71,24 @@ The `jupyter` folder contains [jupyter](https://jupyter.org/) notebooks that wal
 
 ## Web App Usage <a name="web_app_usage"></a>
 
+![web app screenshot](images/webapp.png)
+
 A message can be entered into the web app. When submitted, the app uses the pre-trained ML model to classify the message, so the message can be routed to the appropriate agency.
 
-![web app screenshot](images/webapp.png)
 
 ## Data Visualization <a name="visualization"></a>
 
-The messages are split into three genres: direct, news and social.
-
 ![message genres](images/plot1.png)
 
-The messages are labelled. The distribution of messages along categories is not equal. In machine learning, this is called an imbalanced dataset. Unfortunately such bias in the dataset will result in the fitted machine learning model to also be biased. The quality of classification could be greatly improved by collecting more data and balancing the data set.
+The messages are split into three genres: direct, news and social.
 
 ![message categories](images/plot2.png)
 
-The plot below shows the distribution of messages based on word count, up to 80 words. there are only a few messages over 80 words, but some are as long as 1600 words. The classification could also be improved by concentrating on the most common message lengths and ignoring the outliars.
+The messages are labelled. The distribution of messages along categories is not equal. In machine learning, this is called an imbalanced dataset. Unfortunately such bias in the dataset will result in the fitted machine learning model to also be biased. The quality of classification could be greatly improved by collecting more data and balancing the data set.
 
 ![message lengths](images/plot3.png)
+
+The above plot shows the distribution of messages based on word count, up to 80 words. there are only a few messages over 80 words, but some are as long as 1600 words. The classification could also be improved by concentrating on the most common message lengths and ignoring the outliars.
 
 
 
