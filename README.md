@@ -7,7 +7,10 @@
     1. [Extract, Transform, Load (ETL) Pipeline](#etl_pipeline)
     2. [Machine Learning (ML) Pipeline](#ml_pipeline)
     3. [Web App](#web_app)
-3. [Another paragraph](#paragraph2)
+4. [Jupyter Notebooks](#notebooks)
+5. [Web App Usage](#web_app_usage)
+6. [Data Visualization](#visualization)
+
 
 ## Introduction <a name="introduction"></a>
 
@@ -61,10 +64,33 @@ The web app can be accessed thought this link on the local host: http://0.0.0.0:
 3. Go to http://0.0.0.0:3001/
 
 
+## Jupyter Notebooks <a name="notebooks"></a>
+
+The `jupyter` folder contains [jupyter](https://jupyter.org/) notebooks that walk through the ETL and ML pipelines with comments and visualizations.
 
 
-### Sub paragraph <a name="subparagraph1"></a>
-This is a sub paragraph, formatted in heading 3 style
+## Web App Usage <a name="web_app_usage"></a>
 
-## Another paragraph <a name="paragraph2"></a>
-The second paragraph text
+A message can be entered into the web app. When submitted, the app uses the pre-trained ML model to classify the message, so the message can be routed to the appropriate agency.
+
+![web app screenshot](images/webapp.png)
+
+## Data Visualization <a name="visualization"></a>
+
+The messages are split into three genres: direct, news and social.
+
+![message genres](images/plot1.png)
+
+The messages are labelled. The distribution of messages along categories is not equal. In machine learning, this is called an imbalanced dataset. Unfortunately such bias in the dataset will result in the fitted machine learning model to also be biased. The quality of classification could be greatly improved by collecting more data and balancing the data set.
+
+![message categories](images/plot2.png)
+
+The plot below shows the distribution of messages based on word count, up to 80 words. there are only a few messages over 80 words, but some are as long as 1600 words. The classification could also be improved by concentrating on the most common message lengths and ignoring the outliars.
+
+![message lengths](images/plot3.png)
+
+
+
+
+
+
