@@ -2,6 +2,7 @@ import json
 import plotly
 import pandas as pd
 
+import nltk
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import word_tokenize
 
@@ -14,8 +15,34 @@ import joblib
 from sqlalchemy import create_engine
 from sqlalchemy import inspect
 
+from sklearn.base import BaseEstimator, TransformerMixin
 
 app = Flask(__name__)
+
+
+class StartingVerbExtractor(BaseEstimator, TransformerMixin):
+    '''
+    A custom transformer class that tests if the
+    the sentence starts with a verb.
+    '''
+    def starting_verb(self, text):
+        sentence_list = nltk.sent_tokenize(text)
+        for sentence in sentence_list:
+            pos_tags = nltk.pos_tag(tokenize(sentence))
+            if not len(pos_tags):
+                return False
+            first_word, first_tag = pos_tags[0]
+            if first_tag in ['VB', 'VBP'] or first_word == 'RT':
+                return True
+        return False
+
+    def fit(self, x, y=None):
+        return self
+
+    def transform(self, X):
+        X_tagged = pd.Series(X).apply(self.starting_verb)
+        return pd.DataFrame(X_tagged)
+
 
 def tokenize(text):
     tokens = word_tokenize(text)
@@ -29,13 +56,16 @@ def tokenize(text):
     return clean_tokens
 
 # load data
-engine = create_engine('sqlite:///data/disaster_messages.db')
+engine = create_engine('sqlite:///../data/disaster_messages.db')
 insp = inspect(engine)
 print(insp.get_table_names())
 df = pd.read_sql_table('disaster_messages', engine)
 
+# print(df)
+# print(df.columns)
+
 # load model
-model = joblib.load("../models/your_model_name.pkl")
+model = joblib.load("../models/classifier.pkl")
 
 
 # index webpage displays cool visuals and receives user input text for model
@@ -47,7 +77,11 @@ def index():
     # TODO: Below is an example - modify to extract data for your own visuals
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+
+    df_categories = df.drop(['message', 'genre', 'id', 'original'], axis=1).sum().sort_values(ascending=False)
+
+    word_count = df['message'].str.split().apply(len).value_counts().sort_index().head(80)
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -68,7 +102,52 @@ def index():
                     'title': "Genre"
                 }
             }
+        },
+
+
+        # plot number of messages per category
+        {
+            'data': [
+                Bar(
+                    x=df_categories.index,
+                    y=df_categories.values
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Message Categories',
+                'yaxis': {
+                    'title': "Number of Messages"
+                },
+                'xaxis': {
+                    'title': "Category",
+                    'tickangle': 42
+                }
+            }
+        },
+
+        # plot number of messages per length
+        {
+            'data': [
+                Bar(
+                    x=word_count.index,
+                    y=word_count.values
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Messages Based on Length',
+                'yaxis': {
+                    'title': "Number of Messages"
+                },
+                'xaxis': {
+                    'title': "Length in Words",
+                    'tickangle': 42
+                }
+            }
         }
+
+
     ]
     
     # encode plotly graphs in JSON
