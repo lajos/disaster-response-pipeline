@@ -103,6 +103,13 @@ def build_model():
         ])),
         ('clf', MultiOutputClassifier(AdaBoostClassifier(random_state=42)))
     ])
+
+    parameters = {'clf__features__estimator__learning_rate': [0.25, 0.5, 1.0],
+                  'clf__features__estimator__n_estimators': [50, 100, 200]}
+
+    # use a grid search top find optimum parameters
+    pipeline = GridSearchCV(pipeline, param_grid=parameters, scoring='f1_micro', n_jobs=-1)
+
     return pipeline
 
 
